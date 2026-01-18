@@ -1,0 +1,3016 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SAMS GYM Checkliste</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #E63946;
+            --primary-dark: #C1121F;
+            --dark: #1D1D1D;
+            --dark-lighter: #2A2A2A;
+            --light: #F8F8F8;
+            --accent: #FFD700;
+            --success: #2ECC71;
+            --border: #3A3A3A;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+        }
+
+        body {
+            font-family: 'Work Sans', sans-serif;
+            background: var(--dark);
+            color: var(--light);
+            min-height: 100vh;
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            padding-bottom: 160px;
+        }
+
+        .header {
+            text-align: center;
+            padding: 30px 0;
+            border-bottom: 3px solid var(--primary);
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 3rem;
+            letter-spacing: 4px;
+            color: var(--light);
+        }
+
+        .header h1 span {
+            color: var(--primary);
+        }
+
+        .header p {
+            color: #888;
+            margin-top: 5px;
+            font-size: 0.9rem;
+        }
+
+        .selection-area {
+            background: var(--dark-lighter);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border: 1px solid var(--border);
+        }
+
+        .selection-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .selection-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .form-group {
+            flex: 1;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #AAA;
+        }
+
+        .form-group select {
+            width: 100%;
+            padding: 14px 16px;
+            background: var(--dark);
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            color: var(--light);
+            font-family: 'Work Sans', sans-serif;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: border-color 0.2s;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 20px;
+        }
+
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .form-group select:hover {
+            border-color: #555;
+        }
+
+        .checklist {
+            display: none;
+        }
+
+        .checklist.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .checklist-section {
+            margin-bottom: 25px;
+        }
+
+        .section-header {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.4rem;
+            letter-spacing: 2px;
+            padding: 12px 16px;
+            background: linear-gradient(90deg, var(--primary) 0%, var(--primary-dark) 100%);
+            border-radius: 8px 8px 0 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-header.pflicht { background: linear-gradient(90deg, #E63946 0%, #C1121F 100%); }
+        .section-header.bedarf { background: linear-gradient(90deg, #F4A261 0%, #E76F51 100%); }
+        .section-header.abschluss { background: linear-gradient(90deg, #6C757D 0%, #495057 100%); }
+        .section-header.anweisung { background: linear-gradient(90deg, #7B68EE 0%, #5B4FCF 100%); }
+        .section-header.duschen { background: linear-gradient(90deg, #457B9D 0%, #1D3557 100%); }
+        .section-header.wochentag { background: linear-gradient(90deg, #2A9D8F 0%, #264653 100%); }
+
+        .checklist-items {
+            background: var(--dark-lighter);
+            border: 1px solid var(--border);
+            border-top: none;
+            border-radius: 0 0 8px 8px;
+            overflow: hidden;
+        }
+
+        .checklist-item {
+            display: flex;
+            align-items: flex-start;
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
+            transition: background 0.2s;
+            cursor: pointer;
+        }
+
+        .checklist-item:last-child {
+            border-bottom: none;
+        }
+
+        .checklist-item:hover {
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .checklist-item.checked {
+            background: rgba(46, 204, 113, 0.1);
+        }
+
+        .checklist-item.checked .item-text {
+            text-decoration: line-through;
+            color: #666;
+        }
+
+        .checkbox-wrapper {
+            flex-shrink: 0;
+            width: 28px;
+            height: 28px;
+            margin-right: 14px;
+            margin-top: 2px;
+        }
+
+        .checkbox-wrapper input {
+            display: none;
+        }
+
+        .checkbox-custom {
+            width: 28px;
+            height: 28px;
+            border: 2px solid #555;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            background: var(--dark);
+        }
+
+        .checkbox-wrapper input:checked + .checkbox-custom {
+            background: var(--success);
+            border-color: var(--success);
+        }
+
+        .checkbox-custom svg {
+            width: 16px;
+            height: 16px;
+            stroke: transparent;
+            stroke-width: 3;
+            transition: stroke 0.2s;
+        }
+
+        .checkbox-wrapper input:checked + .checkbox-custom svg {
+            stroke: white;
+        }
+
+        .item-text {
+            flex: 1;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+        }
+
+        .item-note {
+            display: block;
+            font-size: 0.8rem;
+            color: #888;
+            margin-top: 4px;
+            font-style: italic;
+        }
+
+        .progress-container {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--dark-lighter);
+            border-top: 1px solid var(--border);
+            padding: 15px 20px;
+            z-index: 100;
+        }
+
+        .progress-inner {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .progress-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 0.85rem;
+        }
+
+        .progress-stats .count {
+            font-weight: 600;
+            color: var(--success);
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: var(--dark);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--success), #27AE60);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+
+        .btn-complete {
+            width: 100%;
+            margin-top: 15px;
+            padding: 16px;
+            background: var(--success);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.3rem;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: none;
+        }
+
+        .btn-complete:hover {
+            background: #27AE60;
+            transform: translateY(-2px);
+        }
+
+        .btn-complete.visible {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+
+        .empty-state svg {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 20px;
+            stroke: #444;
+        }
+
+        .empty-state p {
+            font-size: 1.1rem;
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 200;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal {
+            background: var(--dark-lighter);
+            border-radius: 16px;
+            padding: 40px;
+            max-width: 450px;
+            width: 100%;
+            text-align: center;
+            border: 1px solid var(--border);
+        }
+
+        .modal-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--success);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 25px;
+        }
+
+        .modal-icon svg {
+            width: 40px;
+            height: 40px;
+            stroke: white;
+            stroke-width: 3;
+        }
+
+        .modal h2 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2rem;
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+        }
+
+        .modal p {
+            color: #AAA;
+            margin-bottom: 25px;
+        }
+
+        .modal-summary {
+            background: var(--dark);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 25px;
+            text-align: left;
+        }
+
+        .modal-summary-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .modal-summary-row:last-child {
+            border-bottom: none;
+        }
+
+        .modal-summary-row span:first-child {
+            color: #888;
+        }
+
+        .modal-summary-row span:last-child {
+            font-weight: 600;
+        }
+
+        .btn-close-modal {
+            padding: 14px 40px;
+            background: var(--primary);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-close-modal:hover {
+            background: var(--primary-dark);
+        }
+
+        .kontrollgang-banner {
+            background: linear-gradient(90deg, #F4A261 0%, #E76F51 100%);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .kontrollgang-banner h3 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.3rem;
+            letter-spacing: 2px;
+            margin-bottom: 5px;
+        }
+
+        .kontrollgang-banner p {
+            font-size: 0.85rem;
+            opacity: 0.9;
+        }
+
+        .coach-banner {
+            background: linear-gradient(90deg, #2A9D8F 0%, #264653 100%);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .coach-banner h3 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.3rem;
+            letter-spacing: 2px;
+            margin-bottom: 5px;
+        }
+
+        .coach-banner p {
+
+            font-size: 0.85rem;
+
+            opacity: 0.9;
+
+        }
+        .info-hint {
+            background: linear-gradient(135deg, #FFF3E0 0%, #FFE0B2 100%);
+            border-left: 4px solid #FF9800;
+            padding: 12px 15px;
+            margin: 0 15px 15px 15px;
+            border-radius: 8px;
+            font-size: 0.85em;
+        }
+        .info-hint strong {
+            color: #E65100;
+            display: block;
+            margin-bottom: 5px;
+        }
+        .info-hint span {
+            color: #555;
+        }
+        .preview-banner {
+            background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-size: 1em;
+            margin-bottom: 15px;
+            border-radius: 10px;
+        }
+        .preview-banner strong {
+            display: block;
+            font-size: 1.2em;
+            margin-bottom: 5px;
+        }
+        .preview-mode .btn-complete {
+            display: none !important;
+        }
+        .preview-mode .sticky-footer,
+        .preview-mode .kontrolle-hint {
+            display: none !important;
+        }
+
+        /* Visp-Süd only items (hidden by default, shown via JS) */
+        .visp-sued-only {
+            display: none !important;
+        }
+        body.show-visp-sued .visp-sued-only {
+            display: flex !important;
+        }
+
+        .lang-switcher {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 5px;
+        }
+        .lang-btn {
+            padding: 8px 12px;
+            background: var(--dark-lighter);
+            border: 2px solid var(--border);
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.2s;
+        }
+        .lang-btn:hover {
+            border-color: var(--primary);
+        }
+        .lang-btn.active {
+            border-color: var(--primary);
+            background: var(--primary);
+        }
+        .header {
+            position: relative;
+        }
+
+        @media (max-width: 480px) {
+            .selection-row {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .header h1 {
+                font-size: 2.2rem;
+            }
+
+            .section-header {
+                font-size: 1.2rem;
+            }
+
+            .lang-switcher {
+                position: relative;
+                top: 0;
+                right: 0;
+                justify-content: center;
+                margin-bottom: 10px;
+            }
+
+            .lang-btn {
+                padding: 6px 10px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="lang-switcher">
+                <button class="lang-btn active" id="langDE" onclick="setLanguage('de')">🇩🇪</button>
+                <button class="lang-btn" id="langEN" onclick="setLanguage('en')">🇬🇧</button>
+            </div>
+            <h1>SAMS <span>GYM</span></h1>
+            <p data-i18n="subtitle">Digitale Checkliste</p>
+        </div>
+
+        <div class="selection-area">
+            <div class="selection-row">
+                <div class="form-group">
+                    <label data-i18n="studio">Studio</label>
+                    <select id="studioSelect">
+                        <option value="" data-i18n="selectStudio">Studio wählen...</option>
+                        <option value="visp-center">Visp-Center</option>
+                        <option value="visp-sued">Visp-Süd</option>
+                        <option value="susten">Susten</option>
+                    </select>
+                </div>
+            </div>
+            <div class="selection-row">
+                <div class="form-group">
+                    <label data-i18n="task">Aufgabe</label>
+                    <select id="taskSelect">
+                        <option value="" data-i18n="selectTask">Aufgabe wählen...</option>
+                        <option value="reinigung" data-i18n="cleaning">Reinigung</option>
+                        <option value="coach" data-i18n="coachShift">Coach (Schicht)</option>
+                        <option value="kontrollgang" data-i18n="controlRound">Kontrollgang</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="empty-state" id="emptyState">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+            </svg>
+            <p data-i18n="emptyState">Wähle oben Studio und Aufgabe aus</p>
+        </div>
+
+        <!-- ==================== REINIGUNG STANDARD (Visp-Süd, Susten) ==================== -->
+        <div class="checklist" id="checklist-reinigung-standard">
+            <div class="checklist-section" data-required="true">
+                <div class="section-header pflicht">
+                    <span data-i18n="alwaysDo">✅ Immer erledigen</span>
+                </div>
+                <div class="checklist-items">
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_1">Geräte von oben bis unten abstauben und reinigen<span class="item-note" data-i18n="item_2">Rahmen, Polster, Griffe, Displays, Ablagen</span></span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_ablagen">Ablagen, Stehtische, Abfalleimer etc. reinigen<span class="item-note" data-i18n="item_ablagen_note">Oberflächen feucht abwischen</span></span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_lavabo">Lavabo / Waschbecken reinigen<span class="item-note" data-i18n="item_lavabo_note">Becken, Armatur, Umgebung</span></span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_3">Boden staubsaugen<span class="item-note" data-i18n="item_4">Ecken und unter Geräten, wo Roboter nicht hinkommt</span></span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_5">Boden nass aufnehmen<span class="item-note" data-i18n="item_6">Flecken lokal mit Wischmopp und Wasser</span></span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_7">Toiletten reinigen<span class="item-note" data-i18n="item_8">inkl. Mülleimer leeren</span></span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="checklist-section">
+                <div class="section-header bedarf">
+                    <span data-i18n="ifNeeded">🔧 Bei Bedarf</span>
+                </div>
+                <div class="checklist-items">
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_9">Spiegel reinigen</span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_10">Garderobenschränke reinigen</span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_11">Decken und hohe Bereiche abstauben</span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_12">Türen und Fensterränder abstauben und reinigen</span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_13">Spinnenweben entfernen<span class="item-note" data-i18n="item_14">Meist in Ecken</span></span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_15">Unter den Laufbändern reinigen<span class="item-note" data-i18n="item_16">1x pro Monat</span></span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_17">Treppenhaus staubsaugen und nass aufnehmen<span class="item-note" data-i18n="item_18">inkl. Fussmatten reinigen</span></span>
+                    </label>
+                    <label class="checklist-item visp-sued-only">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_lift">Lift kontrollieren und reinigen<span class="item-note" data-i18n="item_lift_note">Boden aufnehmen, bei Bedarf staubsaugen</span></span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_19">Fensterscheiben reinigen<span class="item-note" data-i18n="item_20">Auf Anweisung Staff</span></span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="checklist-section">
+                <div class="section-header abschluss">
+                    <span data-i18n="completion">📋 Abschluss</span>
+                </div>
+                <div class="checklist-items">
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_21">Staubwedel auswaschen falls schmutzig</span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_22">Putzmittel, Staubsauger und Stromkabel aufräumen</span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_23">Türen schliessen, Licht im Reinigungsraum/Lager ausschalten</span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_24">Info an Staff<span class="item-note" data-i18n="item_25">Defekte melden &amp; Gerät als defekt markieren, ausgehende Produkte, Fundgegenstände</span></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== REINIGUNG VISP-CENTER (mit Duschen, ohne Treppenhaus) ==================== -->
+        <div class="checklist" id="checklist-reinigung-visp-center">
+            <div class="checklist-section" data-required="true">
+                <div class="section-header pflicht">
+                    <span data-i18n="alwaysDo">✅ Immer erledigen</span>
+                </div>
+                <div class="checklist-items">
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_1">Geräte von oben bis unten abstauben und reinigen<span class="item-note" data-i18n="item_2">Rahmen, Polster, Griffe, Displays, Ablagen</span></span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_ablagen">Ablagen, Stehtische, Abfalleimer etc. reinigen<span class="item-note" data-i18n="item_ablagen_note">Oberflächen feucht abwischen</span></span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_lavabo">Lavabo / Waschbecken reinigen<span class="item-note" data-i18n="item_lavabo_note">Becken, Armatur, Umgebung</span></span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_3">Boden staubsaugen<span class="item-note" data-i18n="item_4">Ecken und unter Geräten, wo Roboter nicht hinkommt</span></span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_5">Boden nass aufnehmen<span class="item-note" data-i18n="item_6">Flecken lokal mit Wischmopp und Wasser</span></span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_7">Toiletten reinigen<span class="item-note" data-i18n="item_8">inkl. Mülleimer leeren</span></span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="checklist-section" data-required="true">
+                <div class="section-header duschen">
+                    <span data-i18n="showers">🚿 Duschen</span>
+                </div>
+                <div class="checklist-items">
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_26">Duschen inkl. Wände reinigen</span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_27">Siphons reinigen</span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_28">Lüftungsschlitze entstauben<span class="item-note" data-i18n="item_29">Oberhalb der Duschen</span></span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="checklist-section">
+                <div class="section-header bedarf">
+                    <span data-i18n="ifNeeded">🔧 Bei Bedarf</span>
+                </div>
+                <div class="checklist-items">
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_9">Spiegel reinigen</span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_10">Garderobenschränke reinigen</span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_11">Decken und hohe Bereiche abstauben</span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_12">Türen und Fensterränder abstauben und reinigen</span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_13">Spinnenweben entfernen<span class="item-note" data-i18n="item_14">Meist in Ecken</span></span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_15">Unter den Laufbändern reinigen<span class="item-note" data-i18n="item_16">1x pro Monat</span></span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_19">Fensterscheiben reinigen<span class="item-note" data-i18n="item_20">Auf Anweisung Staff</span></span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_30">Eingangsbereich reinigen<span class="item-note" data-i18n="item_31">Fussmatten reinigen, Boden saugen/wischen</span></span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="checklist-section">
+                <div class="section-header abschluss">
+                    <span data-i18n="completion">📋 Abschluss</span>
+                </div>
+                <div class="checklist-items">
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_21">Staubwedel auswaschen falls schmutzig</span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_22">Putzmittel, Staubsauger und Stromkabel aufräumen</span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_23">Türen schliessen, Licht im Reinigungsraum/Lager ausschalten</span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_24">Info an Staff<span class="item-note" data-i18n="item_25">Defekte melden &amp; Gerät als defekt markieren, ausgehende Produkte, Fundgegenstände</span></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== COACH STANDARD (Visp-Süd, Susten - mit Treppenhaus) ==================== -->
+        <div class="checklist" id="checklist-coach">
+            <div class="coach-banner">
+                <h3 data-i18n="coachTitle">💪 Coach Schicht</h3>
+                <p data-i18n="coachText">Aufsichtspflicht + 2 Stunden Präsenz (Training erlaubt)</p>
+            </div>
+            <div class="info-hint">
+                <strong data-i18n="infoTitle">💡 Vorausschauend arbeiten</strong>
+                <span data-i18n="infoText">Nicht warten bis etwas leer oder voll ist. Wenn Papier halb leer, Behälter halb voll → gleich erledigen. Die nächste Schicht könnte ausfallen!<br><br>Wenn du weisst, dass die nächste Schicht ausfällt → auch die Aufgaben des nächsten Tages erledigen (z.B. PET/Alu, Desi-Papier).</span>
+            </div>
+
+            <div class="checklist-section" data-required="true">
+                <div class="section-header pflicht">
+                    <span data-i18n="alwaysDo">✅ Immer erledigen</span>
+                </div>
+                <div class="checklist-items">
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_32">SAMS GYM Outfit tragen<span class="item-note" data-i18n="item_33">T-Shirt oder Hoodie Pflicht</span></span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_34">Erreichbarkeit sicherstellen<span class="item-note" data-i18n="item_35">Wifi-Call und Wifi auf ON</span></span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_36">Aufsichtspflicht<span class="item-note" data-i18n="item_37">Hilfe anbieten, bei schlechter Übungsausführung hinweisen</span></span></label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_38">Musik kontrollieren<span class="item-note" data-i18n="item_39">Falls keine Musik läuft → melden</span></span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_40">Garderobe kontrollieren<span class="item-note" data-i18n="item_41">Schränke nur während Training zur Verfügung</span></span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_43">Getränkeautomat kontrollieren<span class="item-note" data-i18n="item_44">Falls leer: Fotos senden oder auffüllen</span></span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_7">Toiletten reinigen<span class="item-note" data-i18n="item_45">Seife und WC-Papier prüfen</span></span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_46">Boden reinigen<span class="item-note" data-i18n="item_47">Handstaubsauger, Flecken nass aufnehmen</span></span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_48">Staubsauger Wartung<span class="item-note" data-i18n="item_49">Hand- und Robotersauger leeren/warten</span></span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_50">Aufräumen<span class="item-note" data-i18n="item_51">Hanteln sortiert zurücklegen, Bänke gerade rücken, Equipment ordentlich versorgen</span></span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_52">Sichtbaren Schmutz entfernen<span class="item-note" data-i18n="item_53">Geräte, Spiegel, Boden, Ablagen, Lavabo - was auffällt, wird geputzt</span></span></label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_54">Raumklima prüfen<span class="item-note" data-i18n="item_55">Temperatur, Luftfeuchtigkeit, Geruch - falls nötig lüften oder melden</span></span>
+                </div>
+            </div>
+
+            <div class="checklist-section">
+                <div class="section-header bedarf">
+                    <span data-i18n="ifNeeded">🔧 Bei Bedarf</span>
+                </div>
+                <div class="checklist-items">
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_56">Auffüllen<span class="item-note" data-i18n="item_57">Desi-Papier, Toilettenpapier, Desinfektionsmittel, Seife</span></span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_58">Treppenhaus reinigen<span class="item-note" data-i18n="item_59">Staubsaugen, nass aufnehmen, Fussmatten reinigen</span></span>
+                    </label>
+                    <label class="checklist-item visp-sued-only">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_lift_coach">Lift kontrollieren und reinigen<span class="item-note" data-i18n="item_lift_coach_note">Boden aufnehmen, bei Bedarf staubsaugen</span></span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_60">Türen und Spiegel reinigen<span class="item-note" data-i18n="item_61">Mit Spiegelreiniger</span></span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_62">Abfall managen<span class="item-note" data-i18n="item_63">Kehricht, WC-Abfall, Desi-Papier, PET, Alu - leeren/sortieren</span></span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="checklist-section">
+                <div class="section-header wochentag">
+                    <span>📅 Wochentags-Aufgaben (1x pro Woche)</span>
+                </div>
+                <div class="checklist-items">
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_64">Desinfektionspapier trennen<span class="item-note" data-i18n="item_65">Dienstag (bei Bedarf auch früher, z.B. wenn Behälter voll)</span></span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_66">PET und Alu trennen<span class="item-note" data-i18n="item_67">Donnerstag (bei Bedarf auch früher, z.B. wenn Behälter voll)</span></span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="checklist-section">
+                <div class="section-header anweisung">
+                    <span>📋 Auf Anweisung</span>
+                </div>
+                <div class="checklist-items">
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_68">Schlüsselkarten<span class="item-note" data-i18n="item_69">1. Foto an Sam 2. Karte testen 3. In Briefkasten legen</span></span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_70">Probetraining durchführen<span class="item-note" data-i18n="item_71">Besucher aufklären, keine weitere Instruktion nötig</span></span>
+                    </label>
+                    
+                </div>
+            </div>
+
+            <div class="checklist-section" data-required="true">
+                <div class="section-header sicherheit">
+                    <span data-i18n="safety">🛡️ Sicherheit</span>
+                </div>
+                <div class="checklist-items">
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_72">Notausgänge frei<span class="item-note" data-i18n="item_73">Sichtkontrolle - nicht versperrt</span></span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_74">Notfalltelefon<span class="item-note" data-i18n="item_75">Auf Ladestation</span></span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_76">Notfallapotheke<span class="item-note" data-i18n="item_77">An Ort und Stelle</span></span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_78">Feuerlöscher<span class="item-note" data-i18n="item_77">An Ort und Stelle</span></span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_79">Defibrillator<span class="item-note" data-i18n="item_77">An Ort und Stelle</span></span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="checklist-section">
+                <div class="section-header abschluss">
+                    <span data-i18n="completion">📋 Abschluss</span>
+                </div>
+                <div class="checklist-items">
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_80">Putzmittel und Material aufräumen</span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_81">Türen, Schränke und Lager schliessen</span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_82">Schlüssel zurücklegen</span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_24">Info an Staff<span class="item-note" data-i18n="item_25">Defekte melden &amp; Gerät als defekt markieren, ausgehende Produkte, Fundgegenstände</span></span>
+                    </label>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- ==================== COACH VISP-CENTER (mit Duschen, ohne Treppenhaus) ==================== -->
+        <div class="checklist" id="checklist-coach-visp-center">
+            <div class="coach-banner">
+                <h3 data-i18n="coachTitle">💪 Coach Schicht</h3>
+                <p data-i18n="coachText">Aufsichtspflicht + 2 Stunden Präsenz (Training erlaubt)</p>
+            </div>
+            <div class="info-hint">
+                <strong data-i18n="infoTitle">💡 Vorausschauend arbeiten</strong>
+                <span data-i18n="infoText">Nicht warten bis etwas leer oder voll ist. Wenn Papier halb leer, Behälter halb voll → gleich erledigen. Die nächste Schicht könnte ausfallen!<br><br>Wenn du weisst, dass die nächste Schicht ausfällt → auch die Aufgaben des nächsten Tages erledigen (z.B. PET/Alu, Desi-Papier).</span>
+            </div>
+
+            <div class="checklist-section" data-required="true">
+                <div class="section-header pflicht">
+                    <span data-i18n="alwaysDo">✅ Immer erledigen</span>
+                </div>
+                <div class="checklist-items">
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_32">SAMS GYM Outfit tragen<span class="item-note" data-i18n="item_33">T-Shirt oder Hoodie Pflicht</span></span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_34">Erreichbarkeit sicherstellen<span class="item-note" data-i18n="item_35">Wifi-Call und Wifi auf ON</span></span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_36">Aufsichtspflicht<span class="item-note" data-i18n="item_37">Hilfe anbieten, bei schlechter Übungsausführung hinweisen</span></span></label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_38">Musik kontrollieren<span class="item-note" data-i18n="item_39">Falls keine Musik läuft → melden</span></span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_40">Garderobe kontrollieren<span class="item-note" data-i18n="item_41">Schränke nur während Training zur Verfügung</span></span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_43">Getränkeautomat kontrollieren<span class="item-note" data-i18n="item_44">Falls leer: Fotos senden oder auffüllen</span></span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_7">Toiletten reinigen<span class="item-note" data-i18n="item_45">Seife und WC-Papier prüfen</span></span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_46">Boden reinigen<span class="item-note" data-i18n="item_47">Handstaubsauger, Flecken nass aufnehmen</span></span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_48">Staubsauger Wartung<span class="item-note" data-i18n="item_49">Hand- und Robotersauger leeren/warten</span></span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_50">Aufräumen<span class="item-note" data-i18n="item_51">Hanteln sortiert zurücklegen, Bänke gerade rücken, Equipment ordentlich versorgen</span></span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_52">Sichtbaren Schmutz entfernen<span class="item-note" data-i18n="item_53">Geräte, Spiegel, Boden, Ablagen, Lavabo - was auffällt, wird geputzt</span></span></label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_54">Raumklima prüfen<span class="item-note" data-i18n="item_55">Temperatur, Luftfeuchtigkeit, Geruch - falls nötig lüften oder melden</span></span>
+                </div>
+            </div>
+
+            <div class="checklist-section" data-required="true">
+                <div class="section-header duschen">
+                    <span data-i18n="showers">🚿 Duschen</span>
+                </div>
+                <div class="checklist-items">
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_93">Duschen kontrollieren und reinigen<span class="item-note" data-i18n="item_94">Bei Bedarf - müssen sauber sein</span></span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="checklist-section">
+                <div class="section-header bedarf">
+                    <span data-i18n="ifNeeded">🔧 Bei Bedarf</span>
+                </div>
+                <div class="checklist-items">
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_56">Auffüllen<span class="item-note" data-i18n="item_57">Desi-Papier, Toilettenpapier, Desinfektionsmittel, Seife</span></span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_60">Türen und Spiegel reinigen<span class="item-note" data-i18n="item_61">Mit Spiegelreiniger</span></span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_62">Abfall managen<span class="item-note" data-i18n="item_63">Kehricht, WC-Abfall, Desi-Papier, PET, Alu - leeren/sortieren</span></span></label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_97">Eingangsbereich kontrollieren<span class="item-note" data-i18n="item_98">Fussmatten reinigen, Boden saugen/wischen falls nötig</span></span>
+                </div>
+            </div>
+
+            <div class="checklist-section">
+                <div class="section-header wochentag">
+                    <span>📅 Wochentags-Aufgaben (1x pro Woche)</span>
+                </div>
+                <div class="checklist-items">
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_64">Desinfektionspapier trennen<span class="item-note" data-i18n="item_65">Dienstag (bei Bedarf auch früher, z.B. wenn Behälter voll)</span></span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_66">PET und Alu trennen<span class="item-note" data-i18n="item_67">Donnerstag (bei Bedarf auch früher, z.B. wenn Behälter voll)</span></span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="checklist-section">
+                <div class="section-header anweisung">
+                    <span>📋 Auf Anweisung</span>
+                </div>
+                <div class="checklist-items">
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_68">Schlüsselkarten<span class="item-note" data-i18n="item_69">1. Foto an Sam 2. Karte testen 3. In Briefkasten legen</span></span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_70">Probetraining durchführen<span class="item-note" data-i18n="item_71">Besucher aufklären, keine weitere Instruktion nötig</span></span>
+                    </label>
+                    
+                </div>
+            </div>
+
+            <div class="checklist-section" data-required="true">
+                <div class="section-header sicherheit">
+                    <span data-i18n="safety">🛡️ Sicherheit</span>
+                </div>
+                <div class="checklist-items">
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_72">Notausgänge frei<span class="item-note" data-i18n="item_73">Sichtkontrolle - nicht versperrt</span></span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_74">Notfalltelefon<span class="item-note" data-i18n="item_75">Auf Ladestation</span></span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_76">Notfallapotheke<span class="item-note" data-i18n="item_77">An Ort und Stelle</span></span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_78">Feuerlöscher<span class="item-note" data-i18n="item_77">An Ort und Stelle</span></span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_79">Defibrillator<span class="item-note" data-i18n="item_77">An Ort und Stelle</span></span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="checklist-section">
+                <div class="section-header abschluss">
+                    <span data-i18n="completion">📋 Abschluss</span>
+                </div>
+                <div class="checklist-items">
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_80">Putzmittel und Material aufräumen</span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_81">Türen, Schränke und Lager schliessen</span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_82">Schlüssel zurücklegen</span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_24">Info an Staff<span class="item-note" data-i18n="item_25">Defekte melden &amp; Gerät als defekt markieren, ausgehende Produkte, Fundgegenstände</span></span>
+                    </label>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- ==================== KONTROLLGANG STANDARD (Visp-Süd, Susten - mit Treppenhaus) ==================== -->
+        <div class="checklist kontrollgang" id="checklist-kontrollgang">
+            <div class="kontrollgang-banner">
+                <h3 data-i18n="kontrollgangTitle">⚡ Kontrollgang</h3>
+                <p data-i18n="kontrollgangText">Schnelle Kontrolle - nur bei Bedarf ausführen</p>
+            </div>
+            <div class="info-hint">
+                <strong data-i18n="infoTitle">💡 Vorausschauend arbeiten</strong>
+                <span data-i18n="infoText">Nicht warten bis etwas leer oder voll ist. Wenn Papier halb leer, Behälter halb voll → gleich erledigen. Die nächste Schicht könnte ausfallen!<br><br>Wenn du weisst, dass die nächste Schicht ausfällt → auch die Aufgaben des nächsten Tages erledigen (z.B. PET/Alu, Desi-Papier).</span>
+            </div>
+
+            <div class="kontrolle-hint" style="background: rgba(69, 123, 157, 0.2); border: 1px solid #457B9D; border-radius: 8px; padding: 12px 15px; margin-bottom: 20px; font-size: 0.9rem;">
+                <span data-i18n="kontrolleHint">ℹ️ <strong>Wichtig:</strong> Hake jeden Punkt ab, den du kontrolliert hast - auch wenn nichts zu erledigen war.</span>
+            </div>
+
+            <div class="checklist-section" data-required="true">
+                <div class="section-header bedarf">
+                    <span data-i18n="checkAndDo">👀 Kontrollieren und bei Bedarf erledigen</span>
+                </div>
+                <div class="checklist-items">
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_38">Musik kontrollieren<span class="item-note" data-i18n="item_39">Falls keine Musik läuft → melden</span></span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_40">Garderobe kontrollieren<span class="item-note" data-i18n="item_42">Schränke leer? Schuhablagen frei?</span></span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_43">Getränkeautomat kontrollieren<span class="item-note" data-i18n="item_44">Falls leer: Fotos senden oder auffüllen</span></span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_83">Toiletten kontrollieren<span class="item-note" data-i18n="item_84">Falls nötig: reinigen, Seife/WC-Papier auffüllen</span></span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_85">Verbrauchsmaterial prüfen<span class="item-note">Desi-Papier, Desinfektionsmittel, Seife</span></span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_46">Boden reinigen<span class="item-note" data-i18n="item_47">Handstaubsauger, Flecken nass aufnehmen</span></span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_86">Staubsauger kontrollieren<span class="item-note" data-i18n="item_87">Hand- und Robotersauger leeren falls voll</span></span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_50">Aufräumen<span class="item-note" data-i18n="item_88">Falls nötig: Hanteln sortiert, Bänke gerade, Equipment ordentlich</span></span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_89">Treppenhaus kontrollieren<span class="item-note" data-i18n="item_90">Falls nötig: Staubsaugen, nass aufnehmen, Fussmatten reinigen</span></span>
+                    </label>
+                    <label class="checklist-item visp-sued-only">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_lift_kontroll">Lift kontrollieren<span class="item-note" data-i18n="item_lift_kontroll_note">Falls nötig: Boden aufnehmen, staubsaugen</span></span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_91">Abfall kontrollieren<span class="item-note" data-i18n="item_92">Kehricht, WC-Abfall, Desi-Papier, PET, Alu - leeren/sortieren falls nötig</span></span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_52">Sichtbaren Schmutz entfernen<span class="item-note" data-i18n="item_53">Geräte, Spiegel, Boden, Ablagen, Lavabo - was auffällt, wird geputzt</span></span></label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_54">Raumklima prüfen<span class="item-note" data-i18n="item_55">Temperatur, Luftfeuchtigkeit, Geruch - falls nötig lüften oder melden</span></span>
+                    
+                </div>
+            </div>
+
+            <div class="checklist-section" data-required="true">
+                <div class="section-header sicherheit">
+                    <span data-i18n="safety">🛡️ Sicherheit</span>
+                </div>
+                <div class="checklist-items">
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_72">Notausgänge frei<span class="item-note" data-i18n="item_73">Sichtkontrolle - nicht versperrt</span></span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_74">Notfalltelefon<span class="item-note" data-i18n="item_75">Auf Ladestation</span></span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_76">Notfallapotheke<span class="item-note" data-i18n="item_77">An Ort und Stelle</span></span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_78">Feuerlöscher<span class="item-note" data-i18n="item_77">An Ort und Stelle</span></span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_79">Defibrillator<span class="item-note" data-i18n="item_77">An Ort und Stelle</span></span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="checklist-section">
+                <div class="section-header abschluss">
+                    <span data-i18n="completion">📋 Abschluss</span>
+                </div>
+                <div class="checklist-items">
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_80">Putzmittel und Material aufräumen</span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_81">Türen, Schränke und Lager schliessen</span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_82">Schlüssel zurücklegen</span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_24">Info an Staff<span class="item-note" data-i18n="item_25">Defekte melden &amp; Gerät als defekt markieren, ausgehende Produkte, Fundgegenstände</span></span>
+                    </label>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- ==================== KONTROLLGANG VISP-CENTER (mit Duschen, ohne Treppenhaus) ==================== -->
+        <div class="checklist kontrollgang" id="checklist-kontrollgang-visp-center">
+            <div class="kontrollgang-banner">
+                <h3 data-i18n="kontrollgangTitle">⚡ Kontrollgang</h3>
+                <p data-i18n="kontrollgangText">Schnelle Kontrolle - nur bei Bedarf ausführen</p>
+            </div>
+            <div class="info-hint">
+                <strong data-i18n="infoTitle">💡 Vorausschauend arbeiten</strong>
+                <span data-i18n="infoText">Nicht warten bis etwas leer oder voll ist. Wenn Papier halb leer, Behälter halb voll → gleich erledigen. Die nächste Schicht könnte ausfallen!<br><br>Wenn du weisst, dass die nächste Schicht ausfällt → auch die Aufgaben des nächsten Tages erledigen (z.B. PET/Alu, Desi-Papier).</span>
+            </div>
+
+            <div class="kontrolle-hint" style="background: rgba(69, 123, 157, 0.2); border: 1px solid #457B9D; border-radius: 8px; padding: 12px 15px; margin-bottom: 20px; font-size: 0.9rem;">
+                <span data-i18n="kontrolleHint">ℹ️ <strong>Wichtig:</strong> Hake jeden Punkt ab, den du kontrolliert hast - auch wenn nichts zu erledigen war.</span>
+            </div>
+
+            <div class="checklist-section" data-required="true">
+                <div class="section-header bedarf">
+                    <span data-i18n="checkAndDo">👀 Kontrollieren und bei Bedarf erledigen</span>
+                </div>
+                <div class="checklist-items">
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_38">Musik kontrollieren<span class="item-note" data-i18n="item_39">Falls keine Musik läuft → melden</span></span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_40">Garderobe kontrollieren<span class="item-note" data-i18n="item_42">Schränke leer? Schuhablagen frei?</span></span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_43">Getränkeautomat kontrollieren<span class="item-note" data-i18n="item_44">Falls leer: Fotos senden oder auffüllen</span></span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_83">Toiletten kontrollieren<span class="item-note" data-i18n="item_84">Falls nötig: reinigen, Seife/WC-Papier auffüllen</span></span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_95">Duschen kontrollieren<span class="item-note" data-i18n="item_96">Falls nötig: reinigen - müssen sauber sein</span></span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_85">Verbrauchsmaterial prüfen<span class="item-note">Desi-Papier, Desinfektionsmittel, Seife</span></span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_46">Boden reinigen<span class="item-note" data-i18n="item_47">Handstaubsauger, Flecken nass aufnehmen</span></span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_86">Staubsauger kontrollieren<span class="item-note" data-i18n="item_87">Hand- und Robotersauger leeren falls voll</span></span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_50">Aufräumen<span class="item-note" data-i18n="item_88">Falls nötig: Hanteln sortiert, Bänke gerade, Equipment ordentlich</span></span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_91">Abfall kontrollieren<span class="item-note" data-i18n="item_92">Kehricht, WC-Abfall, Desi-Papier, PET, Alu - leeren/sortieren falls nötig</span></span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_52">Sichtbaren Schmutz entfernen<span class="item-note" data-i18n="item_53">Geräte, Spiegel, Boden, Ablagen, Lavabo - was auffällt, wird geputzt</span></span></label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_54">Raumklima prüfen<span class="item-note" data-i18n="item_55">Temperatur, Luftfeuchtigkeit, Geruch - falls nötig lüften oder melden</span></span></label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_97">Eingangsbereich kontrollieren<span class="item-note" data-i18n="item_98">Fussmatten reinigen, Boden saugen/wischen falls nötig</span></span>
+                </div>
+            </div>
+
+            <div class="checklist-section" data-required="true">
+                <div class="section-header sicherheit">
+                    <span data-i18n="safety">🛡️ Sicherheit</span>
+                </div>
+                <div class="checklist-items">
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_72">Notausgänge frei<span class="item-note" data-i18n="item_73">Sichtkontrolle - nicht versperrt</span></span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_74">Notfalltelefon<span class="item-note" data-i18n="item_75">Auf Ladestation</span></span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_76">Notfallapotheke<span class="item-note" data-i18n="item_77">An Ort und Stelle</span></span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_78">Feuerlöscher<span class="item-note" data-i18n="item_77">An Ort und Stelle</span></span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_79">Defibrillator<span class="item-note" data-i18n="item_77">An Ort und Stelle</span></span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="checklist-section">
+                <div class="section-header abschluss">
+                    <span data-i18n="completion">📋 Abschluss</span>
+                </div>
+                <div class="checklist-items">
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_80">Putzmittel und Material aufräumen</span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_81">Türen, Schränke und Lager schliessen</span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_82">Schlüssel zurücklegen</span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text" data-i18n="item_24">Info an Staff<span class="item-note" data-i18n="item_25">Defekte melden &amp; Gerät als defekt markieren, ausgehende Produkte, Fundgegenstände</span></span>
+                    </label>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Placeholder -->
+        <div class="checklist" id="checklist-placeholder">
+            <div class="empty-state">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+                <p>Diese Checkliste wird noch erstellt</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Progress Bar -->
+    <div class="progress-container" id="progressContainer" style="display: none;">
+        <div class="progress-inner">
+            <div class="progress-stats">
+                <span><span class="count" id="checkedCount">0</span> / <span id="totalCount">0</span> <span data-i18n="completed">erledigt</span></span>
+                <span id="percentage">0%</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <button class="btn-complete" id="btnComplete" data-i18n="submit">✓ Checkliste abschliessen</button>
+        </div>
+    </div>
+
+    <!-- Warning Modal -->
+    <div class="modal-overlay" id="warningOverlay">
+        <div class="modal">
+            <div class="modal-icon" style="background: #F4A261;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                </svg>
+            </div>
+            <h2 data-i18n="waitMoment">Moment noch!</h2>
+            <p data-i18n="qualityNote">Zur Qualitätssicherung unserer Zertifizierung müssen wir protokollieren, was erledigt wurde.<br><br>Bitte wähle an, welche Aufgaben du heute erledigt hast.</p>
+            <button class="btn-close-modal" id="btnCloseWarning" style="background: #F4A261;" data-i18n="understood">Verstanden</button>
+        </div>
+    </div>
+
+    <!-- Required Sections Warning Modal -->
+    <div class="modal-overlay" id="requiredOverlay">
+        <div class="modal">
+            <div class="modal-icon" style="background: #E63946;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                </svg>
+            </div>
+            <h2 data-i18n="requiredTitle">⚠️ Pflichtaufgaben fehlen!</h2>
+            <p id="requiredMessage">Folgende Bereiche müssen vollständig erledigt werden:</p>
+            <button class="btn-close-modal" id="btnCloseRequired" style="background: #E63946;" data-i18n="requiredBack">Zurück und erledigen</button>
+        </div>
+    </div>
+
+    <!-- Completion Modal -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal">
+            <div class="modal-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            </div>
+            <h2 data-i18n="checklistComplete">Checkliste abgeschlossen!</h2>
+            <p data-i18n="checklistCompleteText">Deine Arbeiten wurden erfasst. Klicke unten um zur Zeiterfassung zurückzukehren.</p>
+            <div class="modal-summary">
+                <div class="modal-summary-row">
+                    <span data-i18n="summaryStudio">Studio:</span>
+                    <span id="summaryStudio">-</span>
+                </div>
+                <div class="modal-summary-row">
+                    <span data-i18n="summaryTask">Aufgabe:</span>
+                    <span id="summaryTask">-</span>
+                </div>
+                <div class="modal-summary-row">
+                    <span data-i18n="summaryPoints">Erledigt:</span>
+                    <span id="summaryPoints">-</span>
+                </div>
+                <div class="modal-summary-row">
+                    <span>Datum/Zeit:</span>
+                    <span id="summaryTime">-</span>
+                </div>
+            </div>
+            <button class="btn-close-modal" id="btnCloseModal">Zurück zur Zeiterfassung</button>
+        </div>
+    </div>
+
+    <script>
+        // ═══════════════════════════════════════════════════════════════
+        // TRANSLATIONS
+        // ═══════════════════════════════════════════════════════════════
+        const translations = {
+            de: {
+                subtitle: "Digitale Checkliste",
+                studio: "Studio",
+                task: "Aufgabe",
+                selectStudio: "Studio wählen...",
+                selectTask: "Aufgabe wählen...",
+                cleaning: "Reinigung",
+                coachShift: "Coach (Schicht)",
+                controlRound: "Kontrollgang",
+                emptyState: "Wähle oben Studio und Aufgabe aus",
+                alwaysDo: "✅ Immer erledigen",
+                ifNeeded: "🔧 Bei Bedarf",
+                completion: "📋 Abschluss",
+                showers: "🚿 Duschen",
+                weekday: "📅 Wochentag",
+                onRequest: "📝 Auf Anweisung",
+                safety: "🛡️ Sicherheit",
+                checkAndDo: "👀 Kontrollieren und bei Bedarf erledigen",
+                submit: "✓ Checkliste abschliessen",
+                completed: "erledigt",
+                checklistComplete: "Checkliste abgeschlossen!",
+                checklistCompleteText: "Deine Arbeiten wurden erfasst. Klicke unten um zur Zeiterfassung zurückzukehren.",
+                closeTabHint: "Du kannst diesen Tab jetzt schliessen und zur Zeiterfassung zurückkehren.",
+                closeTab: "Tab schliessen",
+                waitMoment: "Moment noch!",
+                fewCompleted: "Wenig erledigt?",
+                wellDone: "Super gemacht!",
+                understood: "Verstanden",
+                back: "Zurück",
+                sendAnyway: "Trotzdem absenden",
+                done: "Fertig",
+                previewMode: "Vorschau-Modus",
+                previewNote: "Nur zum Anschauen - kein Absenden möglich",
+                qualityNote: "Zur Qualitätssicherung unserer Zertifizierung müssen wir protokollieren, was erledigt wurde.<br><br>Bitte wähle an, welche Aufgaben du heute erledigt hast.",
+                summaryStudio: "Studio:",
+                summaryTask: "Aufgabe:",
+                summaryPoints: "Erledigt:",
+                summaryTime: "Zeit:",
+                infoBoxTitle: "💡 Vorausschauend arbeiten",
+                infoBoxText: "Wenn nach deiner Schicht niemand mehr kommt (oder Feiertag), bitte extra gründlich arbeiten und Verbrauchsmaterial auffüllen!",
+                lowPercentMsg: "Du hast nur {percent}% der Aufgaben angehakt (Minimum: {min}%). Bist du sicher, dass du absenden möchtest?",
+                // Checklist Items
+                item_1: "Geräte von oben bis unten abstauben und reinigen",
+                item_2: "Rahmen, Polster, Griffe, Displays, Ablagen",
+                item_ablagen: "Ablagen, Stehtische, Abfalleimer etc. reinigen",
+                item_ablagen_note: "Oberflächen feucht abwischen",
+                item_lavabo: "Lavabo / Waschbecken reinigen",
+                item_lavabo_note: "Becken, Armatur, Umgebung",
+                item_3: "Boden staubsaugen",
+                item_4: "Ecken und unter Geräten, wo Roboter nicht hinkommt",
+                item_5: "Boden nass aufnehmen",
+                item_6: "Flecken lokal mit Wischmopp und Wasser",
+                item_7: "Toiletten reinigen",
+                item_8: "inkl. Mülleimer leeren",
+                item_9: "Spiegel reinigen",
+                item_10: "Garderobenschränke reinigen",
+                item_11: "Decken und hohe Bereiche abstauben",
+                item_12: "Türen und Fensterränder abstauben und reinigen",
+                item_13: "Spinnenweben entfernen",
+                item_14: "Meist in Ecken",
+                item_15: "Unter den Laufbändern reinigen",
+                item_16: "1x pro Monat",
+                item_17: "Treppenhaus staubsaugen und nass aufnehmen",
+                item_18: "inkl. Fussmatten reinigen",
+                item_lift: "Lift kontrollieren und reinigen",
+                item_lift_note: "Boden aufnehmen, bei Bedarf staubsaugen",
+                item_lift_coach: "Lift kontrollieren und reinigen",
+                item_lift_coach_note: "Boden aufnehmen, bei Bedarf staubsaugen",
+                item_lift_kontroll: "Lift kontrollieren",
+                item_lift_kontroll_note: "Falls nötig: Boden aufnehmen, staubsaugen",
+                item_19: "Fensterscheiben reinigen",
+                item_20: "Auf Anweisung Staff",
+                item_21: "Staubwedel auswaschen falls schmutzig",
+                item_22: "Putzmittel, Staubsauger und Stromkabel aufräumen",
+                item_23: "Türen schliessen, Licht im Reinigungsraum/Lager ausschalten",
+                item_24: "Info an Staff",
+                item_25: "Defekte melden & Gerät als defekt markieren, ausgehende Produkte, Fundgegenstände",
+                item_26: "Duschen inkl. Wände reinigen",
+                item_27: "Siphons reinigen",
+                item_28: "Lüftungsschlitze entstauben",
+                item_29: "Oberhalb der Duschen",
+                item_30: "Eingangsbereich reinigen",
+                item_31: "Fussmatten reinigen, Boden saugen/wischen",
+                item_32: "SAMS GYM Outfit tragen",
+                item_33: "T-Shirt oder Hoodie Pflicht",
+                item_34: "Erreichbarkeit sicherstellen",
+                item_35: "Wifi-Call und Wifi auf ON",
+                item_36: "Aufsichtspflicht",
+                item_37: "Hilfe anbieten, bei schlechter Übungsausführung hinweisen",
+                item_38: "Musik kontrollieren",
+                item_39: "Falls keine Musik läuft → melden",
+                item_40: "Garderobe kontrollieren",
+                item_41: "Schränke nur während Training zur Verfügung",
+                item_42: "Schränke leer? Schuhablagen frei?",
+                item_43: "Getränkeautomat kontrollieren",
+                item_44: "Falls leer: Fotos senden oder auffüllen",
+                item_45: "Seife und WC-Papier prüfen",
+                item_46: "Boden reinigen",
+                item_47: "Handstaubsauger, Flecken nass aufnehmen",
+                item_48: "Staubsauger Wartung",
+                item_49: "Hand- und Robotersauger leeren/warten",
+                item_50: "Aufräumen",
+                item_51: "Hanteln sortiert zurücklegen, Bänke gerade rücken, Equipment ordentlich versorgen",
+                item_52: "Sichtbaren Schmutz entfernen",
+                item_53: "Geräte, Spiegel, Boden, Ablagen, Lavabo - was auffällt, wird geputzt",
+                item_54: "Raumklima prüfen",
+                item_55: "Temperatur, Luftfeuchtigkeit, Geruch - falls nötig lüften oder melden",
+                item_56: "Auffüllen",
+                item_57: "Desi-Papier, Toilettenpapier, Desinfektionsmittel, Seife",
+                item_58: "Treppenhaus reinigen",
+                item_59: "Staubsaugen, nass aufnehmen, Fussmatten reinigen",
+                item_60: "Türen und Spiegel reinigen",
+                item_61: "Mit Spiegelreiniger",
+                item_62: "Abfall managen",
+                item_63: "Kehricht, WC-Abfall, Desi-Papier, PET, Alu - leeren/sortieren",
+                item_64: "Desinfektionspapier trennen",
+                item_65: "Dienstag (bei Bedarf auch früher, z.B. wenn Behälter voll)",
+                item_66: "PET und Alu trennen",
+                item_67: "Donnerstag (bei Bedarf auch früher, z.B. wenn Behälter voll)",
+                item_68: "Schlüsselkarten",
+                item_69: "1. Foto an Sam 2. Karte testen 3. In Briefkasten legen",
+                item_70: "Probetraining durchführen",
+                item_71: "Besucher aufklären, keine weitere Instruktion nötig",
+                item_72: "Notausgänge frei",
+                item_73: "Sichtkontrolle - nicht versperrt",
+                item_74: "Notfalltelefon",
+                item_75: "Auf Ladestation",
+                item_76: "Notfallapotheke",
+                item_77: "An Ort und Stelle",
+                item_78: "Feuerlöscher",
+                item_79: "Defibrillator",
+                item_80: "Putzmittel und Material aufräumen",
+                item_81: "Türen, Schränke und Lager schliessen",
+                item_82: "Schlüssel zurücklegen",
+                item_83: "Toiletten kontrollieren",
+                item_84: "Falls nötig: reinigen, Seife/WC-Papier auffüllen",
+                item_85: "Verbrauchsmaterial prüfen",
+                item_86: "Staubsauger kontrollieren",
+                item_87: "Hand- und Robotersauger leeren falls voll",
+                item_88: "Falls nötig: Hanteln sortiert, Bänke gerade, Equipment ordentlich",
+                item_89: "Treppenhaus kontrollieren",
+                item_90: "Falls nötig: Staubsaugen, nass aufnehmen, Fussmatten reinigen",
+                item_91: "Abfall kontrollieren",
+                item_92: "Kehricht, WC-Abfall, Desi-Papier, PET, Alu - leeren/sortieren falls nötig",
+                item_93: "Duschen kontrollieren und reinigen",
+                item_94: "Bei Bedarf - müssen sauber sein",
+                item_95: "Duschen kontrollieren",
+                item_96: "Falls nötig: reinigen - müssen sauber sein",
+                item_97: "Eingangsbereich kontrollieren",
+                item_98: "Fussmatten reinigen, Boden saugen/wischen falls nötig",
+                // Banners
+                kontrolleHint: "ℹ️ <strong>Wichtig:</strong> Hake jeden Punkt ab, den du kontrolliert hast - auch wenn nichts zu erledigen war.",
+                kontrollgangTitle: "⚡ Kontrollgang",
+                kontrollgangText: "Schnelle Kontrolle - nur bei Bedarf ausführen",
+                coachTitle: "💪 Coach Schicht",
+                coachText: "Aufsichtspflicht + 2 Stunden Präsenz (Training erlaubt)",
+                infoTitle: "💡 Vorausschauend arbeiten",
+                requiredTitle: "⚠️ Pflichtaufgaben fehlen!",
+                requiredText: "Folgende Bereiche müssen vollständig erledigt werden:",
+                requiredBack: "Zurück und erledigen",
+                infoText: "Nicht warten bis etwas leer oder voll ist. Wenn Papier halb leer, Behälter halb voll → gleich erledigen. Die nächste Schicht könnte ausfallen!<br><br>Wenn du weisst, dass die nächste Schicht ausfällt → auch die Aufgaben des nächsten Tages erledigen (z.B. PET/Alu, Desi-Papier)."
+            },
+            en: {
+                subtitle: "Digital Checklist",
+                studio: "Studio",
+                task: "Task",
+                selectStudio: "Select studio...",
+                selectTask: "Select task...",
+                cleaning: "Cleaning",
+                coachShift: "Coach (Shift)",
+                controlRound: "Control Round",
+                emptyState: "Select studio and task above",
+                alwaysDo: "✅ Always complete",
+                ifNeeded: "🔧 If needed",
+                completion: "📋 Completion",
+                showers: "🚿 Showers",
+                weekday: "📅 Weekday",
+                onRequest: "📝 On request",
+                safety: "🛡️ Safety",
+                checkAndDo: "👀 Check and complete if needed",
+                submit: "✓ Submit checklist",
+                completed: "completed",
+                checklistComplete: "Checklist completed!",
+                checklistCompleteText: "Your work has been recorded. Click below to return to time tracking.",
+                closeTabHint: "You can close this tab now and return to time tracking.",
+                closeTab: "Close tab",
+                waitMoment: "Wait a moment!",
+                fewCompleted: "Few items completed?",
+                wellDone: "Well done!",
+                understood: "Understood",
+                back: "Back",
+                sendAnyway: "Submit anyway",
+                done: "Done",
+                previewMode: "Preview Mode",
+                previewNote: "View only - no submission possible",
+                qualityNote: "For quality assurance of our certification, we need to record what was completed.<br><br>Please select which tasks you completed today.",
+                summaryStudio: "Studio:",
+                summaryTask: "Task:",
+                summaryPoints: "Completed:",
+                summaryTime: "Time:",
+                infoBoxTitle: "💡 Work proactively",
+                infoBoxText: "If no one comes after your shift (or holiday), please work extra thoroughly and refill supplies!",
+                lowPercentMsg: "You only checked {percent}% of tasks (Minimum: {min}%). Are you sure you want to submit?",
+                // Checklist Items
+                item_1: "Dust and clean equipment from top to bottom",
+                item_2: "Frames, padding, handles, displays, shelves",
+                item_ablagen: "Clean tables, standing tables, bins etc.",
+                item_ablagen_note: "Wipe surfaces with damp cloth",
+                item_lavabo: "Clean sink / washbasin",
+                item_lavabo_note: "Basin, faucet, surrounding area",
+                item_3: "Vacuum the floor",
+                item_4: "Corners and under equipment where robot can't reach",
+                item_5: "Wet mop the floor",
+                item_6: "Clean spots locally with mop and water",
+                item_7: "Clean toilets",
+                item_8: "incl. empty trash",
+                item_9: "Clean mirrors",
+                item_10: "Clean lockers",
+                item_11: "Dust ceilings and high areas",
+                item_12: "Dust and clean doors and window frames",
+                item_13: "Remove cobwebs",
+                item_14: "Usually in corners",
+                item_15: "Clean under treadmills",
+                item_16: "Once per month",
+                item_17: "Vacuum and mop stairwell",
+                item_18: "incl. clean floor mats",
+                item_lift: "Check and clean elevator",
+                item_lift_note: "Mop floor, vacuum if needed",
+                item_lift_coach: "Check and clean elevator",
+                item_lift_coach_note: "Mop floor, vacuum if needed",
+                item_lift_kontroll: "Check elevator",
+                item_lift_kontroll_note: "If needed: mop floor, vacuum",
+                item_19: "Clean windows",
+                item_20: "On staff instruction",
+                item_21: "Wash duster if dirty",
+                item_22: "Put away cleaning supplies, vacuum and power cables",
+                item_23: "Close doors, turn off lights in cleaning room/storage",
+                item_24: "Inform staff",
+                item_25: "Report defects & mark equipment as defective, low supplies, lost items",
+                item_26: "Clean showers incl. walls",
+                item_27: "Clean drains",
+                item_28: "Dust ventilation slits",
+                item_29: "Above the showers",
+                item_30: "Clean entrance area",
+                item_31: "Clean floor mats, vacuum/mop floor",
+                item_32: "Wear SAMS GYM outfit",
+                item_33: "T-shirt or hoodie required",
+                item_34: "Ensure availability",
+                item_35: "Wifi-Call and Wifi ON",
+                item_36: "Supervision duty",
+                item_37: "Offer help, point out poor exercise form",
+                item_38: "Check music",
+                item_39: "If no music playing → report",
+                item_40: "Check locker room",
+                item_41: "Lockers only available during training",
+                item_42: "Lockers empty? Shoe racks clear?",
+                item_43: "Check beverage machine",
+                item_44: "If empty: send photos or refill",
+                item_45: "Check soap and toilet paper",
+                item_46: "Clean floor",
+                item_47: "Hand vacuum, wet mop spots",
+                item_48: "Vacuum maintenance",
+                item_49: "Empty/maintain hand and robot vacuums",
+                item_50: "Tidy up",
+                item_51: "Put dumbbells back sorted, straighten benches, store equipment properly",
+                item_52: "Remove visible dirt",
+                item_53: "Equipment, mirrors, floor, shelves, sink - clean what you notice",
+                item_54: "Check room climate",
+                item_55: "Temperature, humidity, smell - ventilate or report if needed",
+                item_56: "Refill",
+                item_57: "Disinfectant paper, toilet paper, disinfectant, soap",
+                item_58: "Clean stairwell",
+                item_59: "Vacuum, mop, clean floor mats",
+                item_60: "Clean doors and mirrors",
+                item_61: "With glass cleaner",
+                item_62: "Manage waste",
+                item_63: "Trash, toilet waste, disinfectant paper, PET, aluminum - empty/sort",
+                item_64: "Separate disinfectant paper",
+                item_65: "Tuesday (earlier if needed, e.g. if container full)",
+                item_66: "Separate PET and aluminum",
+                item_67: "Thursday (earlier if needed, e.g. if container full)",
+                item_68: "Key cards",
+                item_69: "1. Photo to Sam 2. Test card 3. Put in mailbox",
+                item_70: "Conduct trial training",
+                item_71: "Inform visitor, no further instruction needed",
+                item_72: "Emergency exits clear",
+                item_73: "Visual check - not blocked",
+                item_74: "Emergency phone",
+                item_75: "On charging station",
+                item_76: "First aid kit",
+                item_77: "In place",
+                item_78: "Fire extinguisher",
+                item_79: "Defibrillator",
+                item_80: "Put away cleaning supplies and materials",
+                item_81: "Close doors, lockers and storage",
+                item_82: "Return keys",
+                item_83: "Check toilets",
+                item_84: "If needed: clean, refill soap/toilet paper",
+                item_85: "Check supplies",
+                item_86: "Check vacuum",
+                item_87: "Empty hand and robot vacuums if full",
+                item_88: "If needed: dumbbells sorted, benches straight, equipment tidy",
+                item_89: "Check stairwell",
+                item_90: "If needed: vacuum, mop, clean floor mats",
+                item_91: "Check waste",
+                item_92: "Trash, toilet waste, disinfectant paper, PET, aluminum - empty/sort if needed",
+                item_93: "Check and clean showers",
+                item_94: "If needed - must be clean",
+                item_95: "Check showers",
+                item_96: "If needed: clean - must be clean",
+                item_97: "Check entrance area",
+                item_98: "Clean floor mats, vacuum/mop floor if needed",
+                // Banners
+                kontrolleHint: "ℹ️ <strong>Important:</strong> Check off each item you have inspected - even if nothing needed to be done.",
+                kontrollgangTitle: "⚡ Control Round",
+                kontrollgangText: "Quick check - only complete if needed",
+                coachTitle: "💪 Coach Shift",
+                coachText: "Supervision duty + 2 hours presence (training allowed)",
+                infoTitle: "💡 Work proactively",
+                requiredTitle: "⚠️ Required tasks missing!",
+                requiredText: "The following sections must be fully completed:",
+                requiredBack: "Go back and complete",
+                infoText: "Don't wait until something is empty or full. If paper half empty, container half full → complete right away. The next shift might be cancelled!<br><br>If you know the next shift is cancelled → also complete the next day's tasks (e.g. PET/aluminum, disinfectant paper)."
+            }
+        };
+
+        // Check URL param first, then localStorage, default to 'de'
+        const langUrlParams = new URLSearchParams(window.location.search);
+        let currentLang = langUrlParams.get('lang') || localStorage.getItem('checklistLang') || 'de';
+        if (!['de', 'en'].includes(currentLang)) currentLang = 'de';
+
+        function setLanguage(lang) {
+            currentLang = lang;
+            localStorage.setItem('checklistLang', lang);
+            
+            // Update buttons
+            document.getElementById('langDE').classList.toggle('active', lang === 'de');
+            document.getElementById('langEN').classList.toggle('active', lang === 'en');
+            
+            // Update all elements with data-i18n
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[lang][key]) {
+                    // Check if this is an item-text with a nested item-note
+                    if (el.classList.contains('item-text')) {
+                        const itemNote = el.querySelector('.item-note');
+                        if (itemNote) {
+                            // Get the note's translation key and text
+                            const noteKey = itemNote.getAttribute('data-i18n');
+                            const noteText = translations[lang][noteKey] || itemNote.textContent;
+                            // Set main text + note
+                            el.innerHTML = translations[lang][key] + '<span class="item-note" data-i18n="' + noteKey + '">' + noteText + '</span>';
+                        } else {
+                            el.innerHTML = translations[lang][key];
+                        }
+                    } else if (!el.classList.contains('item-note')) {
+                        // Normal element (not item-note, those are handled above)
+                        el.innerHTML = translations[lang][key];
+                    }
+                }
+            });
+            
+            // Update preview banner if exists
+            const previewBanner = document.querySelector('.preview-banner');
+            if (previewBanner) {
+                previewBanner.innerHTML = '<strong>👁️ ' + translations[lang].previewMode + '</strong>' + translations[lang].previewNote;
+            }
+        }
+
+        // Initialize language on load
+        window.addEventListener('load', function() {
+            setLanguage(currentLang);
+        });
+
+        // ═══════════════════════════════════════════════════════════════
+        // Preview Mode Detection
+        const urlParams = new URLSearchParams(window.location.search);
+        const isPreview = urlParams.get('vorschau') === 'true' || urlParams.get('preview') === 'true';
+        
+        if (isPreview) {
+            document.body.classList.add('preview-mode');
+            
+            // Add preview banner after header when DOM is ready
+            window.addEventListener('load', function() {
+                const header = document.querySelector('.header');
+                const previewBanner = document.createElement('div');
+                previewBanner.className = 'preview-banner';
+                previewBanner.innerHTML = '<strong>👁️ Vorschau-Modus</strong>Nur zum Anschauen - kein Absenden möglich';
+                header.after(previewBanner);
+            });
+        }
+
+        const studioSelect = document.getElementById('studioSelect');
+        const taskSelect = document.getElementById('taskSelect');
+        const emptyState = document.getElementById('emptyState');
+        const progressContainer = document.getElementById('progressContainer');
+        const checkedCount = document.getElementById('checkedCount');
+        const totalCount = document.getElementById('totalCount');
+        const percentage = document.getElementById('percentage');
+        const progressFill = document.getElementById('progressFill');
+        const btnComplete = document.getElementById('btnComplete');
+        const modalOverlay = document.getElementById('modalOverlay');
+        const btnCloseModal = document.getElementById('btnCloseModal');
+
+        let currentChecklist = null;
+
+        const studioLabels = {
+            'visp-center': 'Visp-Center',
+            'visp-sued': 'Visp-Süd',
+            'susten': 'Susten'
+        };
+
+        const taskLabels = {
+            'reinigung': 'Reinigung',
+            'coach': 'Coach (Schicht)',
+            'kontrollgang': 'Kontrollgang'
+        };
+
+        // Mapping: Visp-Center hat Duschen, Visp-Süd und Susten haben Treppenhaus
+        const availableChecklists = {
+            // Reinigung
+            'visp-center-reinigung': 'checklist-reinigung-visp-center',
+            'visp-sued-reinigung': 'checklist-reinigung-standard',
+            'susten-reinigung': 'checklist-reinigung-standard',
+            // Coach: Visp-Center hat Duschen, Rest hat Treppenhaus
+            'visp-center-coach': 'checklist-coach-visp-center',
+            'visp-sued-coach': 'checklist-coach',
+            'susten-coach': 'checklist-coach',
+            // Kontrollgang: Visp-Center hat Duschen, Rest hat Treppenhaus
+            'visp-center-kontrollgang': 'checklist-kontrollgang-visp-center',
+            'visp-sued-kontrollgang': 'checklist-kontrollgang',
+            'susten-kontrollgang': 'checklist-kontrollgang'
+        };
+
+        function updateChecklist() {
+            const studio = studioSelect.value;
+            const task = taskSelect.value;
+
+            document.querySelectorAll('.checklist').forEach(cl => cl.classList.remove('active'));
+            
+            if (!studio || !task) {
+                emptyState.style.display = 'block';
+                progressContainer.style.display = 'none';
+                currentChecklist = null;
+                return;
+            }
+
+            emptyState.style.display = 'none';
+            
+            // Show/hide Visp-Süd specific items (Lift)
+            if (studio === 'visp-sued') {
+                document.body.classList.add('show-visp-sued');
+            } else {
+                document.body.classList.remove('show-visp-sued');
+            }
+            
+            const checklistKey = `${studio}-${task}`;
+            const checklistId = availableChecklists[checklistKey];
+
+            if (checklistId) {
+                currentChecklist = document.getElementById(checklistId);
+            } else {
+                currentChecklist = document.getElementById('checklist-placeholder');
+            }
+
+            if (currentChecklist) {
+                currentChecklist.classList.add('active');
+                progressContainer.style.display = 'block';
+                updateProgress();
+            }
+        }
+
+        // Helper: Get only visible checkboxes (exclude hidden visp-sued-only items)
+        function getVisibleCheckboxes(container) {
+            const allCheckboxes = container.querySelectorAll('input[type="checkbox"]');
+            const isVispSued = document.body.classList.contains('show-visp-sued');
+            
+            return Array.from(allCheckboxes).filter(cb => {
+                const item = cb.closest('.checklist-item');
+                if (item && item.classList.contains('visp-sued-only') && !isVispSued) {
+                    return false; // Hide visp-sued-only items when not Visp-Süd
+                }
+                return true;
+            });
+        }
+
+        function updateProgress() {
+            if (!currentChecklist) return;
+
+            const checkboxes = getVisibleCheckboxes(currentChecklist);
+            const checked = checkboxes.filter(cb => cb.checked);
+            
+            const total = checkboxes.length;
+            const done = checked.length;
+            const percent = total > 0 ? Math.round((done / total) * 100) : 0;
+
+            checkedCount.textContent = done;
+            totalCount.textContent = total;
+            percentage.textContent = `${percent}%`;
+            progressFill.style.width = `${percent}%`;
+
+            // Button immer sichtbar - Mitarbeiter haken nur ab was gemacht wurde
+            if (total > 0) {
+                btnComplete.classList.add('visible');
+                if (done === total) {
+                    btnComplete.textContent = '✓ Alles erledigt - Abschliessen';
+                } else {
+                    btnComplete.textContent = '✓ Checkliste abschliessen';
+                }
+            } else {
+                btnComplete.classList.remove('visible');
+            }
+        }
+
+        // Event listeners
+        studioSelect.addEventListener('change', updateChecklist);
+        taskSelect.addEventListener('change', updateChecklist);
+
+        // URL Parameter handling
+        function loadFromUrlParams() {
+            const params = new URLSearchParams(window.location.search);
+            
+            const studio = params.get('studio');
+            const aufgabe = params.get('aufgabe');
+            const mitarbeiter = params.get('name');
+            const email = params.get('email');
+            
+            if (studio && studioSelect.querySelector(`option[value="${studio}"]`)) {
+                studioSelect.value = studio;
+            }
+            
+            if (aufgabe && taskSelect.querySelector(`option[value="${aufgabe}"]`)) {
+                taskSelect.value = aufgabe;
+            }
+            
+            if (mitarbeiter) {
+                window.mitarbeiterName = mitarbeiter;
+            }
+            
+            if (email) {
+                window.mitarbeiterEmail = email;
+            }
+            
+            if (studio && aufgabe) {
+                document.querySelector('.selection-area').style.display = 'none';
+                const taskLabel = taskLabels[aufgabe] || aufgabe;
+                const studioLabel = studioLabels[studio] || studio;
+                document.querySelector('.header p').textContent = `${taskLabel} - ${studioLabel}${mitarbeiter ? ' - ' + mitarbeiter : ''}`;
+            }
+            
+            updateChecklist();
+        }
+        
+        loadFromUrlParams();
+
+        // Checkbox change handler
+        document.addEventListener('change', function(e) {
+            if (e.target.type === 'checkbox') {
+                const item = e.target.closest('.checklist-item');
+                if (item) {
+                    if (e.target.checked) {
+                        item.classList.add('checked');
+                    } else {
+                        item.classList.remove('checked');
+                    }
+                    updateProgress();
+                }
+            }
+        });
+
+        // ═══════════════════════════════════════════════════════════════
+        // HILFSFUNKTION: Datum im Zoho-Format
+        // ═══════════════════════════════════════════════════════════════
+        function getZohoDateTime() {
+            const d = new Date();
+            const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+            const day = String(d.getDate()).padStart(2, '0');
+            const month = months[d.getMonth()];
+            const year = d.getFullYear();
+            const h = String(d.getHours()).padStart(2, '0');
+            const m = String(d.getMinutes()).padStart(2, '0');
+            const s = String(d.getSeconds()).padStart(2, '0');
+            return `${day}-${month}-${year} ${h}:${m}:${s}`;
+        }
+
+        // Complete button handler
+        btnComplete.addEventListener('click', function() {
+            const studio = studioSelect.value;
+            const task = taskSelect.value;
+            const checkboxes = getVisibleCheckboxes(currentChecklist);
+            const checkedBoxes = checkboxes.filter(cb => cb.checked);
+            const mitarbeiter = window.mitarbeiterEmail || 'Nicht angegeben';
+
+            // Prüfen ob mindestens 1 Punkt angehakt ist
+            if (checkedBoxes.length === 0) {
+                document.getElementById('warningOverlay').classList.add('active');
+                return; // Stoppen - nicht absenden
+            }
+
+            // ═══════════════════════════════════════════════════════════════
+            // PFLICHT-SEKTIONEN PRÜFEN
+            // ═══════════════════════════════════════════════════════════════
+            const requiredSections = currentChecklist.querySelectorAll('.checklist-section[data-required="true"]');
+            const incompleteSections = [];
+            
+            requiredSections.forEach(section => {
+                const sectionCheckboxes = getVisibleCheckboxes(section);
+                const sectionChecked = sectionCheckboxes.filter(cb => cb.checked);
+                if (sectionChecked.length < sectionCheckboxes.length) {
+                    // Sektion nicht komplett - Name holen
+                    const headerSpan = section.querySelector('.section-header span');
+                    const sectionName = headerSpan ? headerSpan.textContent : 'Unbekannt';
+                    incompleteSections.push({
+                        name: sectionName,
+                        done: sectionChecked.length,
+                        total: sectionCheckboxes.length
+                    });
+                }
+            });
+            
+            if (incompleteSections.length > 0) {
+                // Warnung anzeigen
+                let listHtml = '<ul style="text-align:left; margin:15px 0;">';
+                incompleteSections.forEach(s => {
+                    listHtml += `<li style="margin:8px 0;"><strong>${s.name}</strong> (${s.done}/${s.total})</li>`;
+                });
+                listHtml += '</ul>';
+                
+                document.getElementById('requiredMessage').innerHTML = 
+                    translations[currentLang].requiredText + listHtml;
+                document.getElementById('requiredOverlay').classList.add('active');
+                return; // Stoppen - Pflichtaufgaben fehlen
+            }
+            // ═══════════════════════════════════════════════════════════════
+
+            document.getElementById('summaryStudio').textContent = studioLabels[studio] || studio;
+            document.getElementById('summaryTask').textContent = taskLabels[task] || task;
+            document.getElementById('summaryPoints').textContent = `${checkedBoxes.length} / ${checkboxes.length}`;
+            document.getElementById('summaryTime').textContent = new Date().toLocaleString('de-CH');
+
+            modalOverlay.classList.add('active');
+
+            // Erledigte Punkte als Text sammeln (mit sauberer Formatierung)
+            const erledigtePunkte = Array.from(checkedBoxes).map(cb => {
+                const item = cb.closest('.checklist-item');
+                const textEl = item.querySelector('.item-text');
+                const haupttext = textEl.childNodes[0].textContent.trim();
+                const noteEl = textEl.querySelector('.item-note');
+                const note = noteEl ? ` (${noteEl.textContent.trim()})` : '';
+                return haupttext + note;
+            }).join('; ');
+
+            const checklistData = {
+                Datum: getZohoDateTime(),
+                Mitarbeiter_Email: mitarbeiter,
+                Studio: studioLabels[studio] || studio,
+                Aufgabe: taskLabels[task] || task,
+                Erledigte_Punkte: erledigtePunkte,
+                Anzahl_Erledigt: checkedBoxes.length,
+                Anzahl_Total: checkboxes.length
+            };
+            
+            console.log('Checkliste abgeschlossen:', checklistData);
+            
+            // Webhook zu Zoho Flow
+            const webhookUrl = 'https://flow.zoho.eu/20077340494/flow/webhook/incoming?zapikey=1001.d256faa4aec8ce79b5e2b57e72b476c2.08ad002177dd4301f9597d764d5e8877&isdebug=false';
+            
+            // Verstecktes iFrame erstellen
+            let iframe = document.getElementById('webhookFrame');
+            if (!iframe) {
+                iframe = document.createElement('iframe');
+                iframe.id = 'webhookFrame';
+                iframe.name = 'webhookFrame';
+                iframe.style.display = 'none';
+                document.body.appendChild(iframe);
+            }
+            
+            // Verstecktes Formular erstellen
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = webhookUrl;
+            form.target = 'webhookFrame';
+            form.enctype = 'application/x-www-form-urlencoded';  // Wichtig für Zoho!
+            
+            // Felder hinzufügen
+            const fields = {
+                Datum: getZohoDateTime(),
+                Mitarbeiter_Email: mitarbeiter,
+                Studio: studioLabels[studio] || studio,
+                Aufgabe: taskLabels[task] || task,
+                Erledigte_Punkte: erledigtePunkte,
+                Anzahl_Erledigt: checkedBoxes.length.toString(),
+                Anzahl_Total: checkboxes.length.toString()
+            };
+            
+            for (const [key, value] of Object.entries(fields)) {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = key;
+                input.value = value;
+                form.appendChild(input);
+            }
+            
+            document.body.appendChild(form);
+            form.submit();
+            document.body.removeChild(form);
+            
+            console.log('Daten an Zoho gesendet:', fields);
+        });
+
+        // Close warning modal handler
+        document.getElementById('btnCloseWarning').addEventListener('click', function() {
+            document.getElementById('warningOverlay').classList.remove('active');
+        });
+
+        // Required sections modal handler
+        document.getElementById('btnCloseRequired').addEventListener('click', function() {
+            document.getElementById('requiredOverlay').classList.remove('active');
+        });
+
+        // Close modal handler - schliesst den Tab
+        btnCloseModal.addEventListener('click', function() {
+            // Versuche Tab zu schliessen
+            window.close();
+            
+            // Falls Tab nicht geschlossen werden kann (manche Browser blockieren das),
+            // zeige Hinweis
+            setTimeout(function() {
+                modalOverlay.querySelector('.modal p').textContent = translations[currentLang].closeTabHint || 'Du kannst diesen Tab jetzt schliessen und zur Zeiterfassung zurückkehren.';
+                btnCloseModal.textContent = translations[currentLang].closeTab || 'Tab schliessen';
+            }, 100);
+        });
+
+        // Kein Schliessen durch Klick auf Hintergrund - Mitarbeiter muss Button klicken
+    </script>
+</body>
+</html>
