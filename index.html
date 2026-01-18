@@ -595,6 +595,7 @@
             </div>
             <h1>SAMS <span>GYM</span></h1>
             <p data-i18n="subtitle">Digitale Checkliste</p>
+            <p id="currentSelection" class="current-selection" style="display:none;"></p>
         </div>
 
         <div class="selection-area">
@@ -2824,7 +2825,12 @@
                 document.querySelector('.selection-area').style.display = 'none';
                 const taskLabel = taskLabels[aufgabe] || aufgabe;
                 const studioLabel = studioLabels[studio] || studio;
-                document.querySelector('.header p').textContent = `${taskLabel} - ${studioLabel}${mitarbeiter ? ' - ' + mitarbeiter : ''}`;
+                // Show current selection below subtitle
+                const selectionEl = document.getElementById('currentSelection');
+                if (selectionEl) {
+                    selectionEl.textContent = `📍 ${studioLabel} • ${taskLabel}`;
+                    selectionEl.style.display = 'inline-block';
+                }
             }
             
             updateChecklist();
