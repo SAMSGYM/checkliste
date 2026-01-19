@@ -2699,16 +2699,13 @@
                 backLink.textContent = '← Zurück zur Zeiterfassung';
                 backLink.onclick = function(e) {
                     e.preventDefault();
-                    window.close();
-                    // Fallback if window.close() doesn't work
-                    setTimeout(function() {
-                        history.back();
-                    }, 200);
+                    // In preview mode: directly open Zeiterfassung (no window.close)
+                    window.location.href = 'https://creatorapp.zohopublic.eu/info_samsgym/sams-gym-zeiterfassung/form-perma/Zeiterfassung/bBtU6YUTwwNkP24TxRDFJBQMRxaZMwHa3WRxZnbfCVJqTJBSHaT2TbJRSwgHpTpZZ5Hg5vdx9gXfZmGn4BCx5wHAGuBkWPgsA4ST';
                 };
                 
                 const helpText = document.createElement('p');
                 helpText.style.cssText = 'color:#999;font-size:12px;margin:8px 0 0 0;';
-                helpText.textContent = 'Oder schliesse diesen Tab manuell';
+                helpText.textContent = 'Öffnet die Zeiterfassung zum Einloggen';
                 
                 backButton.appendChild(backLink);
                 backButton.appendChild(helpText);
