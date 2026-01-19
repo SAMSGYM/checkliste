@@ -2688,6 +2688,34 @@
                 previewBanner.className = 'preview-banner';
                 previewBanner.innerHTML = '<strong>👁️ Vorschau-Modus</strong>Nur zum Anschauen - kein Absenden möglich';
                 header.after(previewBanner);
+                
+                // Add "Back to Zeiterfassung" button at the bottom
+                const backButton = document.createElement('div');
+                backButton.style.cssText = 'position:fixed;bottom:0;left:0;right:0;background:#1a1a1a;padding:15px;text-align:center;z-index:1000;box-shadow:0 -2px 10px rgba(0,0,0,0.3);';
+                
+                const backLink = document.createElement('a');
+                backLink.href = '#';
+                backLink.style.cssText = 'display:inline-block;background:#E63946;color:white;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:bold;font-size:16px;';
+                backLink.textContent = '← Zurück zur Zeiterfassung';
+                backLink.onclick = function(e) {
+                    e.preventDefault();
+                    window.close();
+                    // Fallback if window.close() doesn't work
+                    setTimeout(function() {
+                        history.back();
+                    }, 200);
+                };
+                
+                const helpText = document.createElement('p');
+                helpText.style.cssText = 'color:#999;font-size:12px;margin:8px 0 0 0;';
+                helpText.textContent = 'Oder schliesse diesen Tab manuell';
+                
+                backButton.appendChild(backLink);
+                backButton.appendChild(helpText);
+                document.body.appendChild(backButton);
+                
+                // Add padding at bottom so content is not hidden behind fixed button
+                document.body.style.paddingBottom = '100px';
             });
         }
 
