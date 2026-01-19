@@ -2215,6 +2215,21 @@
         </div>
     </div>
 
+    <!-- Info Overlay (shown on first load) -->
+    <div class="modal-overlay" id="infoOverlay">
+        <div class="modal">
+            <div class="modal-icon" style="background: #457B9D;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M12 16v-4m0-4h.01"/>
+                </svg>
+            </div>
+            <h2 data-i18n="startInfoTitle">Hinweis</h2>
+            <p data-i18n="startInfoText">Bitte hake alle Aufgaben ab, die du heute erledigt hast.<br><br>Pflichtaufgaben (✅ Immer erledigen, 🛡️ Sicherheit) müssen vollständig abgehakt werden.</p>
+            <button class="btn-close-modal" id="btnCloseInfo" style="background: #457B9D;" data-i18n="startInfoBtn">Los geht's!</button>
+        </div>
+    </div>
+
     <!-- Warning Modal -->
     <div class="modal-overlay" id="warningOverlay">
         <div class="modal">
@@ -2302,6 +2317,9 @@
                 checklistCompleteText: "Deine Arbeiten wurden erfasst. Klicke unten um zur Zeiterfassung zurückzukehren.",
                 closeTabHint: "Du kannst diesen Tab jetzt schliessen und zur Zeiterfassung zurückkehren.",
                 closeTab: "Tab schliessen",
+                startInfoTitle: "Hinweis",
+                startInfoText: "Bitte hake alle Aufgaben ab, die du heute erledigt hast.<br><br>Pflichtaufgaben (✅ Immer erledigen, 🛡️ Sicherheit) müssen vollständig abgehakt werden.",
+                startInfoBtn: "Los geht's!",
                 waitMoment: "Moment noch!",
                 fewCompleted: "Wenig erledigt?",
                 wellDone: "Super gemacht!",
@@ -2464,6 +2482,9 @@
                 checklistCompleteText: "Your work has been recorded. Click below to return to time tracking.",
                 closeTabHint: "You can close this tab now and return to time tracking.",
                 closeTab: "Close tab",
+                startInfoTitle: "Note",
+                startInfoText: "Please check off all tasks you completed today.<br><br>Required tasks (✅ Always do, 🛡️ Safety) must be fully completed.",
+                startInfoBtn: "Let's go!",
                 waitMoment: "Wait a moment!",
                 fewCompleted: "Few items completed?",
                 wellDone: "Well done!",
@@ -2838,6 +2859,11 @@
         
         loadFromUrlParams();
 
+        // Show info overlay on first load (NOT in preview mode)
+        if (!isPreview && studioSelect.value && taskSelect.value) {
+            document.getElementById('infoOverlay').classList.add('active');
+        }
+
         // Checkbox change handler
         document.addEventListener('change', function(e) {
             if (e.target.type === 'checkbox') {
@@ -2991,6 +3017,11 @@
             document.body.removeChild(form);
             
             console.log('Daten an Zoho gesendet:', fields);
+        });
+
+        // Close info modal handler
+        document.getElementById('btnCloseInfo').addEventListener('click', function() {
+            document.getElementById('infoOverlay').classList.remove('active');
         });
 
         // Close warning modal handler
