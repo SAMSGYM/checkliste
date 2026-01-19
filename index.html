@@ -2225,7 +2225,7 @@
                 </svg>
             </div>
             <h2 data-i18n="startInfoTitle">Hinweis</h2>
-            <p data-i18n="startInfoText">Bitte hake alle Aufgaben ab, die du heute erledigt hast.<br><br>Pflichtaufgaben (✅ Immer erledigen, 🛡️ Sicherheit) müssen vollständig abgehakt werden.</p>
+            <p data-i18n="startInfoText">Bitte hake alle Aufgaben ab, die du heute erledigt hast.<br><br>Drücke anschliessend unten auf «Checkliste abschliessen».<br>Bei fehlenden Pflichtaufgaben wirst du darauf hingewiesen.</p>
             <button class="btn-close-modal" id="btnCloseInfo" style="background: #457B9D;" data-i18n="startInfoBtn">Los geht's!</button>
         </div>
     </div>
@@ -2318,7 +2318,7 @@
                 closeTabHint: "Du kannst diesen Tab jetzt schliessen und zur Zeiterfassung zurückkehren.",
                 closeTab: "Tab schliessen",
                 startInfoTitle: "Hinweis",
-                startInfoText: "Bitte hake alle Aufgaben ab, die du heute erledigt hast.<br><br>Pflichtaufgaben (✅ Immer erledigen, 🛡️ Sicherheit) müssen vollständig abgehakt werden.",
+                startInfoText: "Bitte hake alle Aufgaben ab, die du heute erledigt hast.<br><br>Drücke anschliessend unten auf «Checkliste abschliessen».<br>Bei fehlenden Pflichtaufgaben wirst du darauf hingewiesen.",
                 startInfoBtn: "Los geht's!",
                 waitMoment: "Moment noch!",
                 fewCompleted: "Wenig erledigt?",
@@ -2483,7 +2483,7 @@
                 closeTabHint: "You can close this tab now and return to time tracking.",
                 closeTab: "Close tab",
                 startInfoTitle: "Note",
-                startInfoText: "Please check off all tasks you completed today.<br><br>Required tasks (✅ Always do, 🛡️ Safety) must be fully completed.",
+                startInfoText: "Please check off all tasks you completed today.<br><br>Then tap «Submit Checklist» at the bottom.<br>You will be notified if required tasks are missing.",
                 startInfoBtn: "Let's go!",
                 waitMoment: "Wait a moment!",
                 fewCompleted: "Few items completed?",
@@ -2739,6 +2739,14 @@
 
             document.querySelectorAll('.checklist').forEach(cl => cl.classList.remove('active'));
             
+            // Reset all checkboxes when switching
+            document.querySelectorAll('input[type="checkbox"]').forEach(function(checkbox) {
+                checkbox.checked = false;
+            });
+            document.querySelectorAll('.checklist-item').forEach(function(item) {
+                item.classList.remove('checked');
+            });
+            
             if (!studio || !task) {
                 emptyState.style.display = 'block';
                 progressContainer.style.display = 'none';
@@ -2857,6 +2865,14 @@
             updateChecklist();
         }
         
+        // Reset all checkboxes on page load (prevent browser cache issues)
+        document.querySelectorAll('input[type="checkbox"]').forEach(function(checkbox) {
+            checkbox.checked = false;
+        });
+        document.querySelectorAll('.checklist-item').forEach(function(item) {
+            item.classList.remove('checked');
+        });
+
         loadFromUrlParams();
 
         // Show info overlay on first load (NOT in preview mode)
