@@ -607,6 +607,7 @@
                         <option value="visp-center">Visp-Center</option>
                         <option value="visp-sued">Visp-Süd</option>
                         <option value="susten">Susten</option>
+                        <option value="tour">Tour (alle Studios)</option>
                     </select>
                 </div>
             </div>
@@ -618,6 +619,7 @@
                         <option value="reinigung" data-i18n="cleaning">Reinigung</option>
                         <option value="coach" data-i18n="coachShift">Coach (Schicht)</option>
                         <option value="kontrollgang" data-i18n="controlRound">Kontrollgang</option>
+                        <option value="tour-fitness">Tour de Fitness</option>
                     </select>
                 </div>
             </div>
@@ -2199,6 +2201,147 @@
                 <p>Diese Checkliste wird noch erstellt</p>
             </div>
         </div>
+
+        <!-- ==================== TOUR DE FITNESS (Stellvertretung - uebergeordnete Tour ueber alle Studios) ==================== -->
+        <div class="checklist" id="checklist-tour-fitness">
+            <div class="kontrollgang-banner">
+                <h3>🚗 Tour de Fitness</h3>
+                <p>Übergeordnete Kontrolle über alle Studios. Hake ab, was du erledigt oder kontrolliert hast.</p>
+            </div>
+
+            <div class="checklist-section">
+                <div class="section-header bedarf">
+                    <span>🔍 Kontrolle &amp; Auffüllen</span>
+                </div>
+                <div class="checklist-items">
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text">Studios sauber und ordentlich<span class="item-note">Trainingsfläche, Garderobe und WC kurz prüfen</span></span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text">Geräte und Maschinen funktionieren<span class="item-note">Defektes oder Auffälliges melden</span></span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text">Verbrauchsmaterial aufgefüllt<span class="item-note">Desi-Papier, Desinfektion, Seife, WC-Papier</span></span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text">Supplements und Getränke aufgefüllt<span class="item-note">Automaten und Regale prüfen</span></span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text">Abfall und Entsorgung erledigt<span class="item-note">PET, Alu, Restmüll</span></span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text">Nachschub aus Lager Susten verteilt<span class="item-note">Fehlendes Material mitnehmen und auffüllen</span></span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="checklist-section" data-required="true">
+                <div class="section-header pflicht">
+                    <span>🔒 Sicherheit</span>
+                </div>
+                <div class="checklist-items">
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text">Zutrittssystem funktioniert<span class="item-note">SALTO, Türen schliessen sauber</span></span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text">Kameras und Überwachung laufen<span class="item-note">Aufzeichnung aktiv</span></span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text">Notausgänge und Fluchtwege frei<span class="item-note">Nichts blockiert</span></span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text">Feuerlöscher vorhanden und zugänglich</span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text">Notbeleuchtung funktioniert</span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text">Aushänge intakt<span class="item-note">Verhaltensregeln, Brandschutz, Filmverbot</span></span>
+                    </label>
+                    <label class="checklist-item">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox">
+                            <div class="checkbox-custom">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <span class="item-text">Keine Schäden oder Auffälligkeiten<span class="item-note">Sonst sofort melden</span></span>
+                    </label>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Progress Bar -->
@@ -2733,13 +2876,15 @@
         const studioLabels = {
             'visp-center': 'Visp-Center',
             'visp-sued': 'Visp-Süd',
-            'susten': 'Susten'
+            'susten': 'Susten',
+            'tour': 'Tour (alle Studios)'
         };
 
         const taskLabels = {
             'reinigung': 'Reinigung',
             'coach': 'Coach (Schicht)',
-            'kontrollgang': 'Kontrollgang'
+            'kontrollgang': 'Kontrollgang',
+            'tour-fitness': 'Tour de Fitness'
         };
 
         // Mapping: Visp-Center hat Duschen, Visp-Süd und Susten haben Treppenhaus
@@ -2755,7 +2900,12 @@
             // Kontrollgang: Visp-Center hat Duschen, Rest hat Treppenhaus
             'visp-center-kontrollgang': 'checklist-kontrollgang-visp-center',
             'visp-sued-kontrollgang': 'checklist-kontrollgang',
-            'susten-kontrollgang': 'checklist-kontrollgang'
+            'susten-kontrollgang': 'checklist-kontrollgang',
+            // Tour de Fitness: uebergeordnete Tour, studio-unabhaengig (gleiche Checkliste fuer jede Auswahl)
+            'tour-tour-fitness': 'checklist-tour-fitness',
+            'visp-center-tour-fitness': 'checklist-tour-fitness',
+            'visp-sued-tour-fitness': 'checklist-tour-fitness',
+            'susten-tour-fitness': 'checklist-tour-fitness'
         };
 
         function updateChecklist() {
